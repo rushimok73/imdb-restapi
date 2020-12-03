@@ -78,11 +78,8 @@ def movie_list(request):
             return JsonResponse({'message': 'Send valid filter key'}, status=status.HTTP_201_CREATED)
         return JsonResponse({'message': 'Error'}, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
-        count = moviedata.objects.all().delete()
-        return JsonResponse({'message': '{} Movie were deleted successfully!'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET'])
+@api_view(['GET', 'DELETE'])
 @authentication_classes((TokenAuthentication,))
 def scrape(request):
     if request.method == 'GET':
@@ -100,6 +97,9 @@ def scrape(request):
             return JsonResponse({'message': 'Movies scraped and stored to db successfully'}, status=status.HTTP_201_CREATED)
         else:
             return JsonResponse(movie_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        count = moviedata.objects.all().delete()
+        return JsonResponse({'message': '{} Movie were deleted successfully!'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['POST'])
